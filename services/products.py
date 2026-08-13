@@ -141,10 +141,26 @@ async def toggle_product(product_id: int) -> None:
             product.is_active = not product.is_active
             await session.commit()
 
+async def delete_product(product_id: int) -> bool:
+    """Удаляет товар. True — удалён полностью, False — скрыт вместо
+    удаления (на него ссылаются существующие заказы)."""
+    from sqlalchemy.exc import IntegrityError
 
-async def delete_product(product_id: int) -> None:
+    async with get_session() as session:
+        product = await session.get(Product, product_id)
+        if not product:
+            return True
+        try:
+            await session.delete(product)
+            await session.commit()
+            return True
+        except IntegrityError:
+            await session.rollback()
+
     async with get_session() as session:
         product = await session.get(Product, product_id)
         if product:
-            await session.delete(product)
+            product.is_active = False
             await session.commit()
+    return False
+
