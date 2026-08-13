@@ -94,7 +94,7 @@ async def cb_product_delete(callback: CallbackQuery) -> None:
         await safe_edit(
             callback.message, "🗑 Товар удалён.", reply_markup=kb.admin_products_list_kb(products, category_id)
         )
-    await callback.answer()
+    await callback.ans)
 
 
 # ------------------------------ Мастер добавления ---------------------------
