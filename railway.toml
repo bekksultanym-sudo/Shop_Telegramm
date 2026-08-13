@@ -1,0 +1,12 @@
+# Конфигурация деплоя на Railway.
+# Railway автоматически найдёт этот файл, соберёт образ по Dockerfile
+# и запустит бота как воркер (без HTTP-порта — это Telegram-поллинг, не веб-сервер).
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "python bot.py"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
