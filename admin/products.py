@@ -87,14 +87,19 @@ async def cb_product_delete(callback: CallbackQuery) -> None:
     product_id = int(callback.data.split(":")[1])
     product = await products_service.get_product(product_id)
     category_id = product.category_id if product else None
-    await products_service.delete_product(product_id)
-    await add_log("product_deleted", callback.from_user.id, {"product_id": product_id})
+    deleted = await products_service.delete_product(product_id)
+    await add_log("product_deleted", callback.from_user.id, {"product_id": product_id, "hard_delete": deleted})
     if category_id:
         products = await products_service.list_products(category_id, only_active=False)
+        text = "🗑 Товар удалён." if deleted else "⚠️ У товара есть заказы, поэтому он не удалён полностью — просто скрыт из каталога."
         await safe_edit(
-            callback.message, "🗑 Товар удалён.", reply_markup=kb.admin_products_list_kb(products, category_id)
+            callback.message, text, reply_markup=kb.admin_products_list_kb(products, category_id)
         )
-    await callback.ans)
+    await callback.answer()
+
+
+
+
 
 
 # ------------------------------ Мастер добавления ---------------------------
