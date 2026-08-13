@@ -262,7 +262,7 @@ def admin_categories_pick_kb(categories: list[Category], prefix: str) -> InlineK
     for c in categories:
         kb.button(text=c.name, callback_data=f"{prefix}:{c.id}")
     kb.adjust(1)
-    kb.row(InlineKeyboardButton(text=CANCEL, callback_data="a_products"))
+    kb.row(InlineKeyboardButton(text="⬅️ Назад в админ-меню", callback_data="admin_home"))
     return kb.as_markup()
 
 
